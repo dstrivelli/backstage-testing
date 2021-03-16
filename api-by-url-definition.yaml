@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: api-definititon-by-url
+  description: ''
+spec:
+  type: openapi
+  lifecycle: production
+  owner: dstrivelli
+  definition:
+    $text: http://localhost:8000/openapi.json

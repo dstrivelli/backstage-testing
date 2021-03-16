@@ -8,4 +8,4 @@ spec:
   lifecycle: production
   owner: dstrivelli
   definition:
-    $text: https://raw.githubusercontent.com/dstrivelli/backstage-testing/main/openapi.yaml
+    $text: https://github.com/dstrivelli/backstage-testing/blob/main/openapi.yaml

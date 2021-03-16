@@ -1,0 +1,669 @@
+openapi: 3.0.0
+info:
+    title: FTI File Repository Documentation.
+    description: An OpenAPI 3.0 specification for BIP FTI REST Services. Documentation
+        is generated using OpenAPI Specification version 3.0.
+    termsOfService: https://developer.va.gov/terms-of-service
+    license:
+        name: Apache 2.0
+        url: https://www.apache.org/licenses/LICENSE-2.0
+    version: 0.0.1-SNAPSHOT
+servers:
+-   url: /api/v1/rest
+paths:
+    /folders/files:search:
+        post:
+            tags:
+            - Folder
+            summary: Search Files
+            description: '### Searches files by provided FolderIdentifier, and search
+                request filers.'
+            operationId: searchFiles
+            parameters:
+            -   name: X-Folder-URI
+                in: header
+                description: 'The identifier that the file will be associated to.
+                    The example provided is for identifying a veteran.<br><br>**Header
+                    Format**:  folder-type:identifier-type:ID<br><br>**Valid Folder
+                    Types**:<br><br>* VETERAN<br><br>**Valid Identifier Types**:<br><br>*
+                    FILENUMBER<br>* SSN<br>* PARTICIPANT_ID<br>* EDIPI'
+                required: false
+                style: simple
+                explode: false
+                schema:
+                    type: string
+                example: VETERAN:FILENUMBER:987267855
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                required: true
+            responses:
+                '200':
+                    description: Search was successful given provided search request.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SearchFilesResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/SearchFilesResponse'
+                '400':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  This request shouldn't be retried
+                        until corrected.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '401':
+                    description: The authentication mechanism failed and hence access
+                        is forbidden.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '403':
+                    description: The request is not authorized.  Please verify credentials
+                        used in the request.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '404':
+                    description: Not Found
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '405':
+                    description: Method Not Allowed
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '415':
+                    description: Unsupported Media Type
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '500':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  Please retry.  If problem persists,
+                        please contact support with a copy of the Response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '501':
+                    description: This request is not yet implemented.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+            security:
+            -   bearer-key: []
+    /files:
+        post:
+            tags:
+            - File
+            summary: Upload a file with associated data
+            description: "### Upload a file. \n This endpoint when given a file and\
+                \ associated data returns a UUID which can be used to retrieve back\
+                \ the latest data provided. *Note: Swagger-Ui has issues with multipart\
+                \ requests, so this endpoint currently serves as an example. Working\
+                \ examples should be created by each provider."
+            operationId: upload
+            parameters:
+            -   name: X-Folder-URI
+                in: header
+                description: 'The identifier that the file will be associated to.
+                    The example provided is for identifying a veteran.<br><br>**Header
+                    Format**:  folder-type:identifier-type:ID<br><br>**Valid Folder
+                    Types**:<br><br>* VETERAN<br><br>**Valid Identifier Types**:<br><br>*
+                    FILENUMBER<br>* SSN<br>* PARTICIPANT_ID<br>* EDIPI'
+                required: false
+                style: simple
+                explode: false
+                schema:
+                    type: string
+                example: VETERAN:FILENUMBER:987267855
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                payload:
+                                    type: object
+                                file:
+                                    type: string
+                                    format: binary
+                        encoding:
+                            file:
+                                contentType: image/png, image/jpeg
+                                style: form
+                $ref: '#/components/requestBodies/inline_object'
+            responses:
+                '200':
+                    description: Response containing the document UUID, the owner,
+                        and the calculated MD5 Hash.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UploadResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/UploadResponse'
+                '400':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  This request shouldn't be retried
+                        until corrected.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '401':
+                    description: The authentication mechanism failed and hence access
+                        is forbidden.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '403':
+                    description: The request is not authorized.  Please verify credentials
+                        used in the request.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '404':
+                    description: Not Found
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '405':
+                    description: Method Not Allowed
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '415':
+                    description: Unsupported Media Type
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '500':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  Please retry.  If problem persists,
+                        please contact support with a copy of the Response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '501':
+                    description: This request is not yet implemented.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                        application/problem+json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+            security:
+            -   bearer-key: []
+    /files/{uuid}/data:
+        get:
+            tags:
+            - File
+            summary: Retrieve file data.
+            description: Retrieve file data.
+            operationId: getData
+            parameters:
+            -   name: uuid
+                in: path
+                description: The UUID of the file data.
+                required: true
+                style: simple
+                explode: false
+                schema:
+                    type: string
+                    format: uuid
+            responses:
+                '200':
+                    description: File data is returned.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetFileDataResponse'
+                '400':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  This request shouldn't be retried
+                        until corrected.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '401':
+                    description: The authentication mechanism failed and hence access
+                        is forbidden.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '403':
+                    description: The request is not authorized.  Please verify credentials
+                        used in the request.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '404':
+                    description: Not Found
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '405':
+                    description: Method Not Allowed
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '415':
+                    description: Unsupported Media Type
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '500':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  Please retry.  If problem persists,
+                        please contact support with a copy of the Response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '501':
+                    description: This request is not yet implemented.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+            security:
+            -   bearer-key: []
+    /files/{uuid}/content:
+        get:
+            tags:
+            - File
+            summary: Downloads file content
+            description: Downloads file content.
+            operationId: getContent
+            parameters:
+            -   name: uuid
+                in: path
+                description: UUID of the file you wish to download
+                required: true
+                style: simple
+                explode: false
+                schema:
+                    type: string
+                    format: uuid
+            responses:
+                '200':
+                    description: File content is returned.
+                    content:
+                        application/pdf:
+                            schema:
+                                type: string
+                                format: byte
+                '400':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  This request shouldn't be retried
+                        until corrected.
+                    content:
+                        application/pdf:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '401':
+                    description: The authentication mechanism failed and hence access
+                        is forbidden.
+                    content:
+                        application/pdf:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '403':
+                    description: The request is not authorized.  Please verify credentials
+                        used in the request.
+                    content:
+                        application/pdf:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '404':
+                    description: Not Found
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '405':
+                    description: Method Not Allowed
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '415':
+                    description: Unsupported Media Type
+                    content:
+                        '*/*':
+                            schema:
+                                type: object
+                '500':
+                    description: There was an error encountered processing the Request.  Response
+                        will contain a  "messages" element that will provide further
+                        information on the error.  Please retry.  If problem persists,
+                        please contact support with a copy of the Response.
+                    content:
+                        application/pdf:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+                '501':
+                    description: This request is not yet implemented.
+                    content:
+                        application/pdf:
+                            schema:
+                                $ref: '#/components/schemas/ProviderResponse'
+            security:
+            -   bearer-key: []
+components:
+    schemas:
+        Message:
+            required:
+            - key
+            - severity
+            type: object
+            properties:
+                timestamp:
+                    type: string
+                key:
+                    type: string
+                severity:
+                    type: string
+                status:
+                    type: string
+                text:
+                    type: string
+        ProviderResponse:
+            type: object
+            properties:
+                messages:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Message'
+        CurrentFileDataComposition:
+            type: object
+            properties:
+                owner:
+                    $ref: '#/components/schemas/FolderIdentifier'
+                uuid:
+                    type: string
+                    format: uuid
+                currentVersionUuid:
+                    type: string
+                    format: uuid
+                expiredDateTime:
+                    type: string
+                currentVersion:
+                    $ref: '#/components/schemas/VersionComposition'
+            example:
+                owner:
+                    id: id
+                    type: VETERAN
+                expiredDateTime: expiredDateTime
+                currentVersionUuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                currentVersion:
+                    systemData:
+                        uploadSource: uploadSource
+                        uploadedDateTime: uploadedDateTime
+                        hashCode: hashCode
+                        contentSize: 5
+                        modifiedDateTime: modifiedDateTime
+                        mimeType: mimeType
+                        uploadedBy: uploadedBy
+                        contentName: contentName
+        GetFileDataResponse:
+            type: object
+            properties:
+                currentFileData:
+                    $ref: '#/components/schemas/CurrentFileDataComposition'
+            example:
+                currentFileData:
+                    owner:
+                        id: id
+                        type: VETERAN
+                    expiredDateTime: expiredDateTime
+                    currentVersionUuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                    uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                    currentVersion:
+                        systemData:
+                            uploadSource: uploadSource
+                            uploadedDateTime: uploadedDateTime
+                            hashCode: hashCode
+                            contentSize: 5
+                            modifiedDateTime: modifiedDateTime
+                            mimeType: mimeType
+                            uploadedBy: uploadedBy
+                            contentName: contentName
+        FolderIdentifier:
+            type: object
+            properties:
+                type:
+                    type: string
+                    enum:
+                    - VETERAN
+                    - PARTICIPANT
+                    - ORGANIZATION
+                    - BIN
+                    - ANY
+                    - UNSUPPORTED
+                id:
+                    type: string
+            example:
+                id: id
+                type: VETERAN
+        JSONObject:
+            type: object
+        PageResponse:
+            type: object
+            properties:
+                totalPages:
+                    type: integer
+                    format: int32
+                requestedResultsPerPage:
+                    type: integer
+                    format: int32
+                currentPage:
+                    type: integer
+                    format: int32
+            example:
+                totalPages: 0
+                requestedResultsPerPage: 6
+                currentPage: 1
+        SearchFilesResponse:
+            type: object
+            properties:
+                page:
+                    $ref: '#/components/schemas/PageResponse'
+                files:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CurrentFileDataComposition'
+            example:
+                files:
+                -   owner:
+                        id: id
+                        type: VETERAN
+                    expiredDateTime: expiredDateTime
+                    currentVersionUuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                    uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                    currentVersion:
+                        systemData:
+                            uploadSource: uploadSource
+                            uploadedDateTime: uploadedDateTime
+                            hashCode: hashCode
+                            contentSize: 5
+                            modifiedDateTime: modifiedDateTime
+                            mimeType: mimeType
+                            uploadedBy: uploadedBy
+                            contentName: contentName
+                -   owner:
+                        id: id
+                        type: VETERAN
+                    expiredDateTime: expiredDateTime
+                    currentVersionUuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                    uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                    currentVersion:
+                        systemData:
+                            uploadSource: uploadSource
+                            uploadedDateTime: uploadedDateTime
+                            hashCode: hashCode
+                            contentSize: 5
+                            modifiedDateTime: modifiedDateTime
+                            mimeType: mimeType
+                            uploadedBy: uploadedBy
+                            contentName: contentName
+                page:
+                    totalPages: 0
+                    requestedResultsPerPage: 6
+                    currentPage: 1
+        SystemDataComposition:
+            type: object
+            properties:
+                uploadedDateTime:
+                    type: string
+                modifiedDateTime:
+                    type: string
+                contentSize:
+                    type: integer
+                    format: int64
+                hashCode:
+                    type: string
+                contentName:
+                    type: string
+                mimeType:
+                    type: string
+                uploadSource:
+                    type: string
+                uploadedBy:
+                    type: string
+            example:
+                uploadSource: uploadSource
+                uploadedDateTime: uploadedDateTime
+                hashCode: hashCode
+                contentSize: 5
+                modifiedDateTime: modifiedDateTime
+                mimeType: mimeType
+                uploadedBy: uploadedBy
+                contentName: contentName
+        VersionComposition:
+            type: object
+            properties:
+                systemData:
+                    $ref: '#/components/schemas/SystemDataComposition'
+                providerData:
+                    $ref: '#/components/schemas/JSONObject'
+            example:
+                systemData:
+                    uploadSource: uploadSource
+                    uploadedDateTime: uploadedDateTime
+                    hashCode: hashCode
+                    contentSize: 5
+                    modifiedDateTime: modifiedDateTime
+                    mimeType: mimeType
+                    uploadedBy: uploadedBy
+                    contentName: contentName
+        UploadResponse:
+            type: object
+            properties:
+                owner:
+                    type: string
+                    description: String representation of the document's owner
+                    example: VETERAN:FILENUMBER:987267855
+                uuid:
+                    type: string
+                    description: UUID representing the file as a whole. This is used
+                        for all primary VEFS-Operations.
+                    format: uuid
+                    example: c30626c9-954d-4dd1-9f70-1e38756d9d97
+                currentVersionUuid:
+                    type: string
+                    description: UUID representing the single point-in-time version
+                        of the document.
+                    format: uuid
+                    example: c30626c9-954d-4dd1-9f70-1e38756d9d98
+                md5:
+                    type: string
+                    description: MD5 Hash of the File field on upload.
+                    example: 32c31506acefa9f125c2a790ed1e675f
+            example:
+                owner: VETERAN:FILENUMBER:987267855
+                currentVersionUuid: c30626c9-954d-4dd1-9f70-1e38756d9d98
+                uuid: c30626c9-954d-4dd1-9f70-1e38756d9d97
+                md5: 32c31506acefa9f125c2a790ed1e675f
+        inline_object:
+            type: object
+            properties:
+                payload:
+                    type: object
+                file:
+                    type: string
+                    format: binary
+    requestBodies:
+        inline_object:
+            content:
+                multipart/form-data:
+                    schema:
+                        $ref: '#/components/schemas/inline_object'
+    securitySchemes:
+        bearer-key:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT

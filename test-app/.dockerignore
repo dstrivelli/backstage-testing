@@ -1,5 +1,0 @@
-.git
-node_modules
-!packages/app/dist
-!packages/backend/dist
-plugins

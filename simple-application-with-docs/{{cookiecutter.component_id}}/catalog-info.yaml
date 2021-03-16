@@ -7,6 +7,6 @@ metadata:
     github.com/project-slug: {{cookiecutter.destination.git.owner + "/" + cookiecutter.destination.git.name}}
     backstage.io/techdocs-ref: url:{{cookiecutter.storePath}}
 spec:
-  type: documentation
+  type: service
   lifecycle: experimental
   owner: {{cookiecutter.owner | jsonify}}

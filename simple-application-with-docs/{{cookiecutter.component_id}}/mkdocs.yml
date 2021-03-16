@@ -1,8 +1,10 @@
 site_name: {{cookiecutter.component_id | jsonify}}
 site_description: {{cookiecutter.description | jsonify}}
+site_addon: {{cookiecutter.additional_property | jsonify}}
 
 nav:
   - Introduction: index.md
+  - Other: other.md
 
 plugins:
   - techdocs-core

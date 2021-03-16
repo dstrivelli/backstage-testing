@@ -1,23 +1,24 @@
 apiVersion: backstage.io/v1alpha1
 kind: Template
 metadata:
-  name: docs-template
-  title: Documentation Template
-  description: Create a new standalone documentation project
+  name: simple-app-with-docs
+  title: Simple Application with Docs Template
+  description: This template demonstrates how a simple app could be created and ship with TechDocs
   tags:
-    - recommended
+    - demo
+    - simple
     - techdocs
-    - mkdocs
 spec:
-  owner: backstage/techdocs-core
+  owner: dstrivelli
   templater: cookiecutter
-  type: documentation
+  type: service
   path: '.'
 
   schema:
     required:
       - component_id
       - description
+      - additional_property
     properties:
       component_id:
         title: Name
@@ -28,3 +29,7 @@ spec:
         title: Description
         type: string
         description: Help others understand what these docs are about.
+      additional_property:
+        title: Some Additional Property
+        type: string
+        description: This represents some additional property that we can use in the template

@@ -1,0 +1,23 @@
+#######################
+version: '3.4'
+services:
+#######################
+  proxy:
+    image: jwilder/nginx-proxy
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment:
+      DEFAULT_HOST: dan.local 
+#######################
+networks:
+  proxy:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.239.0/24

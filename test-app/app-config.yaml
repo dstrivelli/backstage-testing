@@ -1,0 +1,119 @@
+app:
+  title: Scaffolded Backstage App
+  baseUrl: http://backstage.docker.local
+
+organization:
+  name: BIP
+
+backend:
+  baseUrl: http://backstage.docker.local
+  listen:
+    port: 80
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+  cors:
+    origin: http://backstage.docker.local
+    methods: [GET, POST, PUT, DELETE]
+    credentials: true
+  # config options: https://node-postgres.com/api/client
+  database:
+    client: pg
+    connection:
+      host:
+        $env: POSTGRES_HOST
+      port:
+        $env: POSTGRES_PORT
+      user:
+        $env: POSTGRES_USER
+      password:
+        $env: POSTGRES_PASSWORD
+      # https://node-postgres.com/features/ssl
+      #ssl: require # see https://www.postgresql.org/docs/current/libpq-ssl.html Table 33.1. SSL Mode Descriptions (e.g. require)
+        #ca: # if you have a CA file and want to verify it you can uncomment this section
+        #  $file: <file-path>/ca/server.crt
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+
+integrations:
+  github:
+    - host: github.com
+      token:
+        $env: GITHUB_TOKEN
+    ### Example for how to add your GitHub Enterprise instance using the API:
+    # - host: ghe.example.net
+    #   apiBaseUrl: https://ghe.example.net/api/v3
+    #   token:
+    #     $env: GHE_TOKEN
+
+proxy:
+  '/test':
+    target: 'https://example.com'
+    changeOrigin: true
+
+# Reference documentation http://backstage.io/docs/features/techdocs/configuration
+# Note: After experimenting with basic setup, use CI/CD to generate docs
+# and an external cloud storage when deploying TechDocs for production use-case.
+# https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
+techdocs:
+  builder: 'local' # Alternatives - 'external'
+  generators:
+    techdocs: 'local' # Alternatives - 'local'
+  publisher:
+    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+
+kubernetes:
+  serviceLocatorMethod: 'multiTenant'
+  clusterLocatorMethods:
+    - 'config'
+  clusters:
+    - url: https://192.168.64.3:8443
+      name: minikube
+      authProvider: 'serviceAccount'
+      serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6IjlrLWJlTE41T0NrcHNpSmpGVlREMWRULTBnZDM3aFFtVHlrQ29UWmJnY2sifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImJhY2tzdGFnZS10b2tlbi10eGxjaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJiYWNrc3RhZ2UiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJiMGEzNDkyMi0wZWVjLTQ5YWYtOGQ1YS0wMjVhNTJiODcyMjAiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpiYWNrc3RhZ2UifQ.d28wKCaRANQCUfPSWfSZkm1GSFzJstfFY6pvFaMi_iZFxulq22mZ7UClGrn78XuXU8ILlJOlYhouho6WX_lMrCS02FAmEjn14cih-HF2LKyrwhhiv3LXAYA1baWchPR28BlYpmcjIUGs38glaqr81TZgpOpEQ2uaCaljg3NSkj-qhU7Stv_SxccJ4L5BQ1H2s6m3I8mkgQ56pYJoyrq-xXfTpw9457jt6lC23b4rE5OoitC3ajmT6Vby1NrYpXCOCMBesIqv3iroVxcLUE6bV5wybrdATmAeoO6KdDBv7jEelguYYj-VnBafU2firRRMAAShb8Jmh95S2DRlDERvsw
+
+auth:
+  # see https://backstage.io/docs/tutorials/quickstart-app-auth to know more about enabling auth providers
+ providers:
+    github:
+      development:
+        clientId: f2f6cf436e77cb852bc8
+        clientSecret: 24f849438b3aa79f919ffe41408e69a231d58854
+
+scaffolder:
+  github:
+    token:
+      $env: GITHUB_TOKEN
+    visibility: public # or 'internal' or 'private'
+
+catalog:
+  rules:
+    - allow: [Component, API, Group, User, Template, Location]
+  locations:
+    # Backstage example components
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
+
+    # Backstage example APIs
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-apis.yaml
+
+    # Backstage example templates
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/react-ssr-template/template.yaml
+      rules:
+        - allow: [Template]
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/springboot-grpc-template/template.yaml
+      rules:
+        - allow: [Template]
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/create-react-app/template.yaml
+      rules:
+        - allow: [Template]
+    - type: url
+      target: https://github.com/spotify/cookiecutter-golang/blob/master/template.yaml
+      rules:
+        - allow: [Template]
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/docs-template/template.yaml
+      rules:
+        - allow: [Template]

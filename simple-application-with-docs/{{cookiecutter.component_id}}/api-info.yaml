@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: {{cookiecutter.component_id | jsonify}}-api
+  description: {{cookiecutter.description | jsonify}}
+spec:
+  type: openapi
+  lifecycle: development
+  owner: {{cookiecutter.owner | jsonify}}
+  definition:
+    $text: {{cookiecutter.storePath}}/blob/main/openapi.yaml

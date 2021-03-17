@@ -8,3 +8,4 @@ spec:
   profile:
     displayName: Green
     email: green@example.com
+  children: [dstrivelli]

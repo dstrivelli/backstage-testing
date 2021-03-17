@@ -2,9 +2,10 @@ apiVersion: backstage.io/v1alpha1
 kind: Group
 metadata:
   name: purple
-  description: the green group
+  description: the purple group
 spec:
   type: business-unit
   profile:
     displayName: Purple
     email: purple@example.com
+  children: []

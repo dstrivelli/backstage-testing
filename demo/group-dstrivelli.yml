@@ -8,3 +8,5 @@ spec:
   profile:
     displayName: Dan Strivelli's Group
     email: dstrivelli@example.com
+  parent: green
+  children: []

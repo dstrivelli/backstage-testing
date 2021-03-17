@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: dstrivelli
+spec:
+  profile:
+    displayName: Donathon BoJonathan
+    email: dan@strivelli.component
+  memberOf: [dstrivelli]

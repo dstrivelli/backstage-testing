@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: dstrivelli
+  description: dstrivelli group
+spec:
+  type: business-unit
+  profile:
+    displayName: Dan Strivelli's Group
+    email: dstrivelli@example.com

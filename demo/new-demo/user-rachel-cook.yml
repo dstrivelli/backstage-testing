@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: rachel-cook
+spec:
+  profile:
+    displayName: Rachel Cook
+    email: rachel-cook@example.com
+  memberOf: [vefs]

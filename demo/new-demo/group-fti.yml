@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: fti
+  description: This group maintains all fti-related applications.
+spec:
+  type: business-unit
+  profile:
+    displayName: FTI-Team
+    email: fti@example.com
+  children: []

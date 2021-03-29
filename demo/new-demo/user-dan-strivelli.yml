@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: dan-strivelli
+spec:
+  profile:
+    displayName: Dan Strivelli
+    email: dan-strivelli@example.com
+  memberOf: [claims, vefs]

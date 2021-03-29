@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: jane-smith
+spec:
+  profile:
+    displayName: Jane Smith
+    email: jane-smith@example.com
+  memberOf: [fti]

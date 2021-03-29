@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: henry-barber
+spec:
+  profile:
+    displayName: Henry Barber
+    email: henry-barber@example.com
+  memberOf: [claims]

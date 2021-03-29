@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: claims
+  description: This group maintains all Claims-related applications.
+spec:
+  type: business-unit
+  profile:
+    displayName: Claims-Team
+    email: claims@example.com
+  children: []

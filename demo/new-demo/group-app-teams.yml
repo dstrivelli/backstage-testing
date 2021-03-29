@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: applications
+  description: This group encompasses all application groups
+spec:
+  type: business-unit
+  profile:
+    displayName: Applications
+    email: applications@example.com
+  children: [claims, vefs, fti]

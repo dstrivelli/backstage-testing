@@ -8,4 +8,4 @@ spec:
   lifecycle: development
   owner: {{cookiecutter.owner | jsonify}}
   definition:
-    $text: {{cookiecutter.storePath}}/blob/main/openapi.yaml
+    $text: {{cookiecutter.storePath}}/blob/master/openapi.yaml

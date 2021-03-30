@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Template
 metadata:
-  name: simple-app-with-docs
+  name: java-spring-boot-app
   title: Java Spring Boot App
   description: This template demonstrates how a Java Spring Boot app could be created and ship with TechDocs
   tags:

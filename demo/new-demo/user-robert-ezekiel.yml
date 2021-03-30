@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: 1114Organic
+spec:
+  profile:
+    displayName: Robert Ezekiel
+    email: robert-ezekiel@example.com
+  memberOf: [vefs]

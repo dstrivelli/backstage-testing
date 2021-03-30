@@ -1,0 +1,31 @@
+apiVersion: backstage.io/v1alpha1
+kind: Template
+metadata:
+  name: java-spring-boot-app
+  title: Java Spring Boot App
+  description: This template demonstrates how a Java Spring Boot app could be created and ship with TechDocs
+  tags:
+    - demo
+    - techdocs
+    - java
+    - "spring-boot"
+spec:
+  owner: dstrivelli
+  templater: cookiecutter
+  type: service
+  path: '.'
+
+  schema:
+    required:
+      - component_id
+      - description
+    properties:
+      component_id:
+        title: Name
+        type: string
+        pattern: ^[a-z0-9A-Z_.-]{1,63}$
+        description: Unique name of the component
+      description:
+        title: Description
+        type: string
+        description: Help others understand what these docs are about.

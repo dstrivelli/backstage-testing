@@ -2,12 +2,13 @@ apiVersion: backstage.io/v1alpha1
 kind: Template
 metadata:
   name: simple-app-with-docs
-  title: Simple Application with Docs Template
-  description: This template demonstrates how a simple app could be created and ship with TechDocs
+  title: Java Spring Boot App
+  description: This template demonstrates how a Java Spring Boot app could be created and ship with TechDocs
   tags:
     - demo
-    - simple
     - techdocs
+    - java
+    - "spring-boot"
 spec:
   owner: dstrivelli
   templater: cookiecutter
@@ -18,7 +19,6 @@ spec:
     required:
       - component_id
       - description
-      - additional_property
     properties:
       component_id:
         title: Name
@@ -29,7 +29,3 @@ spec:
         title: Description
         type: string
         description: Help others understand what these docs are about.
-      additional_property:
-        title: Some Additional Property
-        type: string
-        description: This represents some additional property that we can use in the template

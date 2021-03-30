@@ -5,6 +5,7 @@ metadata:
   description: This group maintains all vefs-related applications.
 spec:
   type: business-unit
+  owner: user:dstrivelli
   profile:
     displayName: VEFS-Team
     email: vefs@example.com

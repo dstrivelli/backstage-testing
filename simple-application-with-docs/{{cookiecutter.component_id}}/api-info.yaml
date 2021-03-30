@@ -5,7 +5,7 @@ metadata:
   description: {{cookiecutter.description | jsonify}}
 spec:
   type: openapi
-  lifecycle: development
+  lifecycle: production
   owner: {{cookiecutter.owner | jsonify}}
   definition:
     $text: {{cookiecutter.storePath}}/blob/master/openapi.yaml

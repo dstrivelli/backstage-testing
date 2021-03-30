@@ -8,7 +8,7 @@ metadata:
     backstage.io/techdocs-ref: url:{{cookiecutter.storePath}}
 spec:
   type: service
-  lifecycle: experimental
+  lifecycle: production
   owner: {{cookiecutter.owner | jsonify}}
   providesApis:
-    - {{cookiecutter.component_id }}-api
+    - {{cookiecutter.component_id }}

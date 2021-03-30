@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "bffs-api"
+  description: "This API provides functionality around the BFFS capability."
+  tags:
+    - fiduciary 
+    - veterans
+  annotations:
+    github.com/project-slug: dstrivelli/bffs-api
+    backstage.io/techdocs-ref: url:https://github.com/dstrivelli/bffs-api
+spec:
+  type: service
+  lifecycle: production
+  owner: "bffs"
+  providesApis:
+    - bffs-api

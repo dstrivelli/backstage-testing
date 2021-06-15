@@ -1,0 +1,99 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "backstage.fullname" . }}-backend
+
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: backstage
+      component: backend
+
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/backstage.logs: '[{"source":"backstage","service":"backend"}]'
+      labels:
+        app: backstage
+        component: backend
+
+    spec:
+      {{- if .Values.dockerRegistrySecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.dockerRegistrySecretName }}
+      {{- end}}
+      containers:
+        - name: {{ .Chart.Name }}-backend
+          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          command:
+            - "node"
+            - "packages/backend"
+            - "--config"
+            - "app-config.development.yaml"
+          # command:
+          #   - "/bin/sleep"
+          #   - "infinity"
+          ports:
+            - containerPort: {{ .Values.backend.containerPort }}
+          resources:
+          {{- toYaml .Values.backend.resources | nindent 12 }}
+          envFrom:
+            - secretRef:
+                name: {{ include "backstage.fullname" . }}-backend
+            - configMapRef:
+                name: {{ include "backstage.fullname" . }}-app-env
+            - configMapRef:
+                name: {{ include "backstage.fullname" . }}-auth
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.backend.nodeEnv | default "development" }}
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
+            - name: APP_CONFIG_backend_database_connection_password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.postgresql.passwordSecret" .}}
+                  key: postgresql-password
+          volumeMounts:
+            - name: postgres-ca
+              mountPath: {{ include "backstage.backend.postgresCaDir" . }}
+            - name: app-config
+              mountPath: {{ printf "/usr/src/app/%s" (include "backstage.appConfigFilename" .) }}
+              subPath: {{ include "backstage.appConfigFilename" . }}
+            - mountPath: /etc/ssl/certs/ca-certificates.crt
+              name: va-cacerts
+              subPath: ca-certificates.crt
+      volumes:
+        - name: postgres-ca
+          configMap:
+            name: {{ include "backstage.fullname" . }}-postgres-ca
+        - name: app-config
+          configMap:
+            name: {{ include "backstage.fullname" . }}-app-config
+        - name: va-cacerts
+          secret:
+            defaultMode: 420
+            secretName: va-cacerts
+
+
+{{- if .Values.backend.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "backend.serviceName" . }}
+
+spec:
+  ports:
+    - port: 80
+      targetPort: {{ .Values.backend.containerPort }}
+
+  selector:
+    app: backstage
+    component: backend
+
+  type: ClusterIP
+{{- end }}

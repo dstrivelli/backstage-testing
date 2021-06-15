@@ -1,0 +1,149 @@
+# Default values for backstage.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+frontend:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: container-registry.alt8.bip.va.gov/backstage
+    tag: frontend-themed
+    pullPolicy: IfNotPresent
+  containerPort: 80
+  resources:
+    requests:
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+backend:
+  enabled: true
+  nodeEnv: development
+  demoData: true
+  replicaCount: 1
+  image:
+    repository: container-registry.alt8.bip.va.gov/backstage
+    tag: backend-0.0.1
+    pullPolicy: IfNotPresent
+  containerPort: 7000
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 1024Mi
+
+lighthouse:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: roadiehq/lighthouse-audit-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  containerPort: 3003
+  resources:
+    requests:
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+  database:
+    connection:
+      port:
+      host:
+      user:
+      password:
+      database: lighthouse_audit_service
+    pathToDatabaseCa:
+
+nameOverride: ''
+fullnameOverride: ''
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+issuer:
+  email:
+  clusterIssuer: 'letsencrypt-staging'
+
+global:
+  postgresql:
+    postgresqlUsername: backend-user
+    caFilename: ca.crt
+
+postgresql:
+  enabled: true
+  nameOverride: postgresql
+  tls:
+    enabled: true
+    certificatesSecret: backstage-postgresql-certs
+    certFilename: tls.crt
+    certKeyFilename: tls.key
+  volumePermissions:
+    enabled: true
+  initdbScriptsSecret: backstage-postgresql-initdb
+
+appConfig:
+  app:
+    baseUrl: https://backstage.alt8.bip.va.gov
+    title: 'BAH Backstage'
+    googleAnalyticsTrackingId:
+  backend:
+    baseUrl: https://backstage.alt8.bip.va.gov
+    listen:
+      port: 7000
+    cors:
+      origin: https://backstage.alt8.bip.va.gov
+    database:
+      client: pg
+      connection:
+        database: backstage_plugin_catalog
+        host:
+        user:
+        port:
+        password:
+        ssl:
+          rejectUnauthorized: false
+          ca:
+  sentry:
+    organization: example-org-name
+  techdocs:
+    storageUrl: https://backstage.alt8.bip.va.gov/api/techdocs/static/docs
+    requestUrl: https://backstage.alt8.bip.va.gov/api/techdocs
+  lighthouse:
+    baseUrl: https://backstage.alt8.bip.va.gov/lighthouse-api
+  rollbar:
+    organization: example-org-name
+
+  # Auth config has recently moved into the app config file in upstream Backstage. However,
+  # most of this config simply mandates that items like the client id and client secret should
+  # be picked up from the environment variables named below. Those environment variables are
+  # set in this helm controlled environment by the 'auth' configuration below this section.
+  # Thus, the only key in this config which directly controls an app config is the
+  # auth.providers.github.development.appOrigin property.
+  auth:
+    providers:
+      github:
+        development:
+          appOrigin: 'https://backstage.alt8.bip.va.gov'
+          secure: false
+          clientId:
+            $env: AUTH_GITHUB_CLIENT_ID
+          clientSecret:
+            $env: AUTH_GITHUB_CLIENT_SECRET
+          enterpriseInstanceUrl:
+            $env: AUTH_GITHUB_ENTERPRISE_INSTANCE_URL
+
+auth:
+  github:
+    clientId: 35cd286c7afc06089e44
+    clientSecret: 1dee25cac3cc17a960dd1e48f24237a07ac6e69b
+  sentryToken: e
+  rollbarAccountToken: f
+  # This is a 'Personal Access Token'
+  circleciAuthToken: r
+  # Used by the scaffolder to create GitHub repos. Must have 'repo' scope.
+  githubToken: 37ab3fa16cf8163c061ed1ac8d8fd8b8186ab40f
+  gitlabToken: g
+  newRelicRestApiKey: r
+  travisciAuthToken: fake-travis-ci-auth-token
+  pagerdutyToken: h
